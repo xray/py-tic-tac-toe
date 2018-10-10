@@ -1,7 +1,7 @@
 class View:
   def __init__(self):
     return
-  
+   
   def dynamic_section(self, selections):
     staged = []
     for state in selections:
