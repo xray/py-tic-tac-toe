@@ -1,14 +1,21 @@
+from game.view import View
+
+DEFAULT_DEPENDENCIES = {
+  "view": View()
+}
+
 class UserInput:
-  def __init__(self):
-    return
+  def __init__(self, injected_dependencies={}):
+    dependencies = dict(DEFAULT_DEPENDENCIES, **injected_dependencies)
+    self.view = dependencies["view"]
   
   def prompt(self):
-    player_input = input("Make your Selection: ")
+    player_input = input("Make your move: ")
     try:
       self.validate(player_input)
-      return input()
+      return self.convert(player_input)
     except UserWarning as error:
-      print("\033[93m" + str(error) + "\033[0m")
+      self.view.error(error)
       self.prompt()
 
   def validate(self, player_input):
@@ -26,6 +33,7 @@ class UserInput:
     return True
 
   def convert(self, player_input):
+    player_input = player_input.upper()
     conversion = []
     selection = list(player_input)
     if selection[0] == "T":
@@ -41,5 +49,3 @@ class UserInput:
     else:
       conversion.append(2)
     return conversion
-  
-

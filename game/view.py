@@ -25,3 +25,9 @@ class View:
     print(self.dynamic_section(board_state[2]))
     print(board_bottom)
     return True
+
+  def error(self, err):
+    print("\033[93m" + str(err) + "\033[0m")
+
+  def notify(self, msg):
+    print(msg)
