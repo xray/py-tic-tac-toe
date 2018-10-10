@@ -1,5 +1,6 @@
 # Tic-Tac-Toe (Python)
-Python Version: 3.7.0
+Python Version: 3.7.0  
+- [x] Tests Passing
 
 ### Play
 How to play:
