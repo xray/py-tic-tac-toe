@@ -24,3 +24,15 @@ def test_validation_invalid_second_character():
   with pytest.raises(UserWarning) as error:
     new_user_input.validate("TB")
     assert error.value == "\"A\" is not one of the valid selctions... (L, M, or R)"
+
+def test_conversion_T_to_0_and_L_to_0():
+  new_user_input = UserInput()
+  assert new_user_input.convert("TL") == [0, 0]
+
+def test_conversion_M_to_1_and_M_to_1():
+  new_user_input = UserInput()
+  assert new_user_input.convert("MM") == [1, 1]
+
+def test_conversion_B_to_2_and_R_to_2():
+  new_user_input = UserInput()
+  assert new_user_input.convert("BR") == [2, 2]

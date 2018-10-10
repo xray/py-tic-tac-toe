@@ -24,5 +24,22 @@ class UserInput:
     if selection[1] != "L" and selection[1] != "M" and selection[1] != "R":
       raise UserWarning("\"" + str(selection[1]) + "\" is not one of the valid selctions... (L, M, or R)")
     return True
+
+  def convert(self, player_input):
+    conversion = []
+    selection = list(player_input)
+    if selection[0] == "T":
+      conversion.append(0)
+    elif selection[0] == "M":
+      conversion.append(1)
+    else:
+      conversion.append(2)
+    if selection[1] == "L":
+      conversion.append(0)
+    elif selection[1] == "M":
+      conversion.append(1)
+    else:
+      conversion.append(2)
+    return conversion
   
 
