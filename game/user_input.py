@@ -17,15 +17,30 @@ class UserInput:
   
   def prompt(self):
     player_input = input("Make your move: ")
-    validation = self.validate(player_input)
-    if validation == True:
-      return self.convert(player_input)
+    return player_input
+  
+  def get_valid_input(self, game_state=None):
+    if game_state == None:
+      game_state = self.state
+    player_in = self.prompt()
+    validate_input_successful, input_problems = self.validate_input(player_in)
+    if validate_input_successful:
+      player_in_conversion = self.convert(player_in)
+      if self.validate_position(player_in_conversion, game_state):
+        return player_in_conversion
+      else:
+        return self.get_valid_input(game_state)
     else:
-      for validation_issues in validation:
-        self.view.error(validation_issues)
-      return self.prompt()
+      return self.get_valid_input(game_state)
 
-  def validate(self, player_input):
+  def validate_position(self, position, game_state):
+    if game_state.board[position[0]][position[1]] != 0:
+      self.view.error("This position is already populated...")
+      return False
+    else:
+      return True
+
+  def validate_input(self, player_input):
     player_input = player_input.upper()
     selection = list(player_input)
     required_length = 2
@@ -43,9 +58,11 @@ class UserInput:
         key_cap = chr(48 + self.state.board_size)
         validation_errors.append("\"" + str(selection[1]) + "\" is not one of the valid selctions in position 2... (1 - " + key_cap + ")")
     if len(validation_errors) > 0:
-      return validation_errors
+      for validation_issues in validation_errors:
+        self.view.error(validation_issues)
+      return False, validation_errors
     else:
-      return True
+      return True, []
 
   def convert(self, player_input):
     player_input = player_input.upper()
