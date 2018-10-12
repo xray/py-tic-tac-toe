@@ -9,7 +9,9 @@ DEFAULT_DEPENDENCIES = {
 }
 
 class TicTacToe:
-  def __init__(self, injected_dependencies={}):
+  def __init__(self, injected_dependencies=None):
+    if injected_dependencies == None:
+      injected_dependencies = {}
     dependencies = dict(DEFAULT_DEPENDENCIES, **injected_dependencies)
     self.view = dependencies["view"]
     self.state = dependencies["state"]
@@ -27,4 +29,4 @@ class TicTacToe:
     if self.state.is_game_complete:
       print("Done")
     else:
-      self.play()
+      return self.play()
