@@ -23,7 +23,7 @@ def test_win_top_row():
     def __init__(self):
       self.board_size = 3
       self.board = [[1, 1, 1], [0, 0, 0], [0, 0, 0]]
-  assert new_state.is_game_complete(MockState()) == True
+  assert new_state.is_game_complete(MockState()) == (True, False)
 
 def test_win_left_column():
   new_state = State()
@@ -31,7 +31,7 @@ def test_win_left_column():
     def __init__(self):
       self.board_size = 3
       self.board = [[1, 0, 0], [1, 0, 0], [1, 0, 0]]
-  assert new_state.is_game_complete(MockState()) == True
+  assert new_state.is_game_complete(MockState()) == (True, False)
 
 def test_win_middle_column():
   new_state = State()
@@ -39,7 +39,7 @@ def test_win_middle_column():
     def __init__(self):
       self.board_size = 3
       self.board = [[0, 1, 0], [0, 1, 0], [0, 1, 0]]
-  assert new_state.is_game_complete(MockState()) == True
+  assert new_state.is_game_complete(MockState()) == (True, False)
 
 def test_incomplete_left_column():
   new_state = State()
@@ -47,7 +47,7 @@ def test_incomplete_left_column():
     def __init__(self):
       self.board_size = 3
       self.board = [[1, 0, 0], [1, 0, 0], [0, 0, 0]]
-  assert new_state.is_game_complete(MockState()) == False
+  assert new_state.is_game_complete(MockState()) == (False, False)
 
 def test_incomplete_left_column_one_move():
   new_state = State()
@@ -55,7 +55,7 @@ def test_incomplete_left_column_one_move():
     def __init__(self):
       self.board_size = 3
       self.board = [[1, 0, 0], [0, 0, 0], [0, 0, 0]]
-  assert new_state.is_game_complete(MockState()) == False
+  assert new_state.is_game_complete(MockState()) == (False, False)
 
 def test_diagonal_left_to_right():
   new_state = State()
@@ -63,7 +63,7 @@ def test_diagonal_left_to_right():
     def __init__(self):
       self.board_size = 4
       self.board = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]
-  assert new_state.is_game_complete(MockState()) == True
+  assert new_state.is_game_complete(MockState()) == (True, False)
 
 def test_diagonal_right_to_left():
   new_state = State()
@@ -71,7 +71,15 @@ def test_diagonal_right_to_left():
     def __init__(self):
       self.board_size = 4
       self.board = [[0, 0, 0, 1], [0, 0, 1, 0], [0, 1, 0, 0], [1, 0, 0, 0]]
-  assert new_state.is_game_complete(MockState()) == True
+  assert new_state.is_game_complete(MockState()) == (True, False)
+
+def test_cats_game():
+  new_state = State()
+  class MockState:
+    def __init__(self):
+      self.board_size = 4
+      self.board = [[1, 2, 1, 2], [2, 1, 2, 1], [2, 1, 2, 1], [1, 2, 1, 2]]
+  assert new_state.is_game_complete(MockState()) == (True, True)
 
 def test_check_identical_values_all_ones():
   new_state = State()

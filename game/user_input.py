@@ -7,6 +7,11 @@ DEFAULT_DEPENDENCIES = {
   "state": State()
 }
 
+class ValidationResult:
+  def __init__(self, is_valid, errors):
+    self.is_valid = is_valid
+    self.errors = errors
+
 class UserInput:
   def __init__(self, injected_dependencies=None):
     if injected_dependencies == None:
@@ -23,8 +28,7 @@ class UserInput:
     if game_state == None:
       game_state = self.state
     player_in = self.prompt()
-    validate_input_successful, input_problems = self.validate_input(player_in)
-    if validate_input_successful:
+    if self.validate_input(player_in).is_valid:
       player_in_conversion = self.convert(player_in)
       if self.validate_position(player_in_conversion, game_state):
         return player_in_conversion
@@ -60,9 +64,9 @@ class UserInput:
     if len(validation_errors) > 0:
       for validation_issues in validation_errors:
         self.view.error(validation_issues)
-      return False, validation_errors
+      return ValidationResult(False, validation_errors)
     else:
-      return True, []
+      return ValidationResult(True, [])
 
   def convert(self, player_input):
     player_input = player_input.upper()

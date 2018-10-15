@@ -4,34 +4,34 @@ def test_validation_too_long():
   new_user_input = UserInput()
   validation_errors = new_user_input.validate_input("A11")
   print(validation_errors)
-  assert validation_errors[0] == False
-  assert str(validation_errors[1][0]) == str("Input is 1 characters too long...")
+  assert validation_errors.is_valid == False
+  assert validation_errors.errors[0] == str("Input is 1 characters too long...")
 
 def test_validation_too_short():
   new_user_input = UserInput()
   validation_errors = new_user_input.validate_input("A")
-  assert validation_errors[0] == False
-  assert str(validation_errors[1][0]) == str("Input is 1 characters too short...")
+  assert validation_errors.is_valid == False
+  assert validation_errors.errors[0] == str("Input is 1 characters too short...")
 
 def test_validation_invalid_first_character():
   new_user_input = UserInput()
-  is_valid, errors  = new_user_input.validate_input("D2")
-  assert is_valid == False
-  assert str(errors[0]) == str("\"D\" is not one of the valid selctions in position 1... (A - C)")
+  validation_errors = new_user_input.validate_input("D2")
+  assert validation_errors.is_valid == False
+  assert validation_errors.errors[0] == str("\"D\" is not one of the valid selctions in position 1... (A - C)")
 
 def test_validation_invalid_second_character():
   new_user_input = UserInput()
   validation_errors = new_user_input.validate_input("A4")
-  assert validation_errors[0] == False
-  assert str(validation_errors[1][0]) == str("\"4\" is not one of the valid selctions in position 2... (1 - 3)")
+  assert validation_errors.is_valid == False
+  assert validation_errors.errors[0] == str("\"4\" is not one of the valid selctions in position 2... (1 - 3)")
 
 def test_validation_multi_error():
   new_user_input = UserInput()
   validation_errors = new_user_input.validate_input("RESPECT")
-  assert validation_errors[0] == False
-  assert str(validation_errors[1][0]) == str("Input is 5 characters too long...")
-  assert str(validation_errors[1][1]) == str("\"R\" is not one of the valid selctions in position 1... (A - C)")
-  assert str(validation_errors[1][2]) == str("\"E\" is not one of the valid selctions in position 2... (1 - 3)")
+  assert validation_errors.is_valid == False
+  assert validation_errors.errors[0] == str("Input is 5 characters too long...")
+  assert validation_errors.errors[1] == str("\"R\" is not one of the valid selctions in position 1... (A - C)")
+  assert validation_errors.errors[2] == str("\"E\" is not one of the valid selctions in position 2... (1 - 3)")
 
 def test_validation_big_board_one_off_cases():
   class State:
@@ -39,9 +39,9 @@ def test_validation_big_board_one_off_cases():
       self.board_size = 8
   new_user_input = UserInput({"state": State()})
   validation_errors = new_user_input.validate_input("I9")
-  assert validation_errors[0] == False
-  assert str(validation_errors[1][0]) == str("\"I\" is not one of the valid selctions in position 1... (A - H)")
-  assert str(validation_errors[1][1]) == str("\"9\" is not one of the valid selctions in position 2... (1 - 8)")
+  assert validation_errors.is_valid == False
+  assert validation_errors.errors[0] == str("\"I\" is not one of the valid selctions in position 1... (A - H)")
+  assert validation_errors.errors[1] == str("\"9\" is not one of the valid selctions in position 2... (1 - 8)")
 
 def test_conversion_A_to_0_and_1_to_0():
   new_user_input = UserInput()

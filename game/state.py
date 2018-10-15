@@ -5,7 +5,7 @@ DEFAULT_DEPENDENCIES = {
 }
 
 class State:
-  def __init__(self, board_size=5, injected_dependencies=None):
+  def __init__(self, board_size=3, injected_dependencies=None):
     if injected_dependencies == None:
       injected_dependencies = {}
     dependencies = dict(DEFAULT_DEPENDENCIES, **injected_dependencies)
@@ -63,6 +63,7 @@ class State:
     
     possible_wins_to_check = []
     win_count = 0
+    spaces_filled = 0
 
     for rows in game_state.board:
       possible_wins_to_check.append(rows)
@@ -88,11 +89,21 @@ class State:
         diagonal_possibility.append(lists[current_position])
         current_position -= 1
       possible_wins_to_check.append(diagonal_possibility)
-      
-    for possible_win in possible_wins_to_check:
-      if self.check_identical_values(possible_win) == True:
-        win_count += 1
-    if win_count > 0:
-      return True
+
+    for cats_game in game_state.board:
+      for cats_game_possibility in cats_game:
+        if cats_game_possibility == 0:
+          continue
+        else:
+          spaces_filled += 1
+    
+    if spaces_filled == game_state.board_size * game_state.board_size:
+      return True, True
     else:
-      return False
+      for possible_win in possible_wins_to_check:
+        if self.check_identical_values(possible_win) == True:
+          win_count += 1
+      if win_count > 0:
+        return True, False
+      else:
+        return False, False
