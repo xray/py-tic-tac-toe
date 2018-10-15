@@ -1,7 +1,8 @@
 from game.state import State
 
 def test_dynamic_board():
-  assert State().create_board(5) == [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
+  new_state = State()
+  assert new_state.create_board(5) == [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
 
 def test_update_board():
   new_state = State()
@@ -9,7 +10,80 @@ def test_update_board():
   assert new_state.board == [[0, 0, 0], [0, 0, 0], [0, 1, 0]]
 
 def test_board_size():
-  assert State().regulate_board_size(5) == 5
+  new_state = State()
+  assert new_state.regulate_board_size(5) == 5
 
 def test_board_size_too_big():
-  assert State().regulate_board_size(10) == 9
+  new_state = State()
+  assert new_state.regulate_board_size(10) == 9
+
+def test_win_top_row():
+  new_state = State()
+  class MockState:
+    def __init__(self):
+      self.board_size = 3
+      self.board = [[1, 1, 1], [0, 0, 0], [0, 0, 0]]
+  assert new_state.is_game_complete(MockState()) == True
+
+def test_win_left_column():
+  new_state = State()
+  class MockState:
+    def __init__(self):
+      self.board_size = 3
+      self.board = [[1, 0, 0], [1, 0, 0], [1, 0, 0]]
+  assert new_state.is_game_complete(MockState()) == True
+
+def test_win_middle_column():
+  new_state = State()
+  class MockState:
+    def __init__(self):
+      self.board_size = 3
+      self.board = [[0, 1, 0], [0, 1, 0], [0, 1, 0]]
+  assert new_state.is_game_complete(MockState()) == True
+
+def test_incomplete_left_column():
+  new_state = State()
+  class MockState:
+    def __init__(self):
+      self.board_size = 3
+      self.board = [[1, 0, 0], [1, 0, 0], [0, 0, 0]]
+  assert new_state.is_game_complete(MockState()) == False
+
+def test_incomplete_left_column_one_move():
+  new_state = State()
+  class MockState:
+    def __init__(self):
+      self.board_size = 3
+      self.board = [[1, 0, 0], [0, 0, 0], [0, 0, 0]]
+  assert new_state.is_game_complete(MockState()) == False
+
+def test_diagonal_left_to_right():
+  new_state = State()
+  class MockState:
+    def __init__(self):
+      self.board_size = 4
+      self.board = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]
+  assert new_state.is_game_complete(MockState()) == True
+
+def test_diagonal_right_to_left():
+  new_state = State()
+  class MockState:
+    def __init__(self):
+      self.board_size = 4
+      self.board = [[0, 0, 0, 1], [0, 0, 1, 0], [0, 1, 0, 0], [1, 0, 0, 0]]
+  assert new_state.is_game_complete(MockState()) == True
+
+def test_check_identical_values_all_ones():
+  new_state = State()
+  test_array = [1, 1, 1, 1]
+  assert new_state.check_identical_values(test_array) == True
+
+def test_check_identical_values_all_twos():
+  new_state = State()
+  test_array = [2, 2, 2, 2]
+  assert new_state.check_identical_values(test_array) == True
+
+def test_check_identical_values_all_zeros():
+  new_state = State()
+  test_array = [0, 0, 0, 0]
+  assert new_state.check_identical_values(test_array) == False

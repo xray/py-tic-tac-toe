@@ -5,12 +5,11 @@ DEFAULT_DEPENDENCIES = {
 }
 
 class State:
-  def __init__(self, board_size=3, injected_dependencies=None):
+  def __init__(self, board_size=5, injected_dependencies=None):
     if injected_dependencies == None:
       injected_dependencies = {}
     dependencies = dict(DEFAULT_DEPENDENCIES, **injected_dependencies)
     self.view = dependencies.get("view")
-    self.is_game_complete = False
     self.user_input = []
     self.player1_turn = True
     self.board_size = self.regulate_board_size(board_size)
@@ -45,3 +44,55 @@ class State:
       return 9
     else:
       return board_size
+
+  def check_identical_values(self, list_to_check):
+    number_of_values = len(list_to_check)
+    number_of_ones_in_list = 0
+    number_of_twos_in_list = 0
+    for value in list_to_check:
+      if value == 1:
+        number_of_ones_in_list += 1
+      if value == 2:
+        number_of_twos_in_list += 1
+    return number_of_ones_in_list == number_of_values or number_of_twos_in_list == number_of_values
+
+
+  def is_game_complete(self, game_state=None):
+    if game_state == None:
+      game_state = self
+    
+    possible_wins_to_check = []
+    win_count = 0
+
+    for rows in game_state.board:
+      possible_wins_to_check.append(rows)
+    
+    for column in range(len(game_state.board)):
+      column_possibility = []
+      for lists in game_state.board:
+        column_possibility.append(lists[column])
+      possible_wins_to_check.append(column_possibility)
+
+    for diagonal_left_to_right in range(2):
+      diagonal_possibility = []
+      current_position = 0
+      for lists in game_state.board:
+        diagonal_possibility.append(lists[current_position])
+        current_position += 1
+      possible_wins_to_check.append(diagonal_possibility)
+
+    for diagonal_right_to_left in range(2):
+      diagonal_possibility = []
+      current_position = game_state.board_size - 1
+      for lists in game_state.board:
+        diagonal_possibility.append(lists[current_position])
+        current_position -= 1
+      possible_wins_to_check.append(diagonal_possibility)
+      
+    for possible_win in possible_wins_to_check:
+      if self.check_identical_values(possible_win) == True:
+        win_count += 1
+    if win_count > 0:
+      return True
+    else:
+      return False

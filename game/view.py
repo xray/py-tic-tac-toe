@@ -1,5 +1,3 @@
-import math
-
 class View:
   def __init__(self):
     return
@@ -67,3 +65,9 @@ class View:
 
   def notify(self, msg):
     print(msg)
+  
+  def who_won(self, player_one_turn):
+    if player_one_turn == True:
+      print("Player 2 Wins!")
+    else:
+      print("Player 1 Wins!")

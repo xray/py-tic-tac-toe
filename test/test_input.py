@@ -15,9 +15,9 @@ def test_validation_too_short():
 
 def test_validation_invalid_first_character():
   new_user_input = UserInput()
-  validation_errors = new_user_input.validate_input("D2")
-  assert validation_errors[0] == False
-  assert str(validation_errors[1][0]) == str("\"D\" is not one of the valid selctions in position 1... (A - C)")
+  is_valid, errors  = new_user_input.validate_input("D2")
+  assert is_valid == False
+  assert str(errors[0]) == str("\"D\" is not one of the valid selctions in position 1... (A - C)")
 
 def test_validation_invalid_second_character():
   new_user_input = UserInput()
@@ -54,4 +54,17 @@ def test_conversion_I_to_8_and_9_to_8():
 def test_conversion_B_to_2_and_R_to_2():
   new_user_input = UserInput()
   assert new_user_input.convert("C4") == [2, 3]
-  
+
+def test_position_validation_valid():
+  new_user_input = UserInput()
+  class State:
+    def __init__(self):
+      self.board = [[1, 1, 1], [1, 1, 1], [1, 0, 1]]
+  assert new_user_input.validate_position([2, 1], State()) == True
+
+def test_position_validation_invalid():
+  new_user_input = UserInput()
+  class State:
+    def __init__(self):
+      self.board = [[0, 0, 0], [0, 0, 0], [0, 1, 0]]
+  assert new_user_input.validate_position([2, 1], State()) == False

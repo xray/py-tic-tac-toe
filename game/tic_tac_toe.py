@@ -26,7 +26,10 @@ class TicTacToe:
       self.view.notify("Player 2, it's your turn!")
     self.state.update_input(self.user_input.get_valid_input(self.state))
     self.state.update_board(self.state.user_input)
-    if self.state.is_game_complete:
-      print("Done")
+    if self.state.is_game_complete():
+      self.view.board(self.state.board)
+      self.view.who_won(self.state.player1_turn)
+      self.view.notify("The Game is now over...")
+      exit()
     else:
       return self.play()
