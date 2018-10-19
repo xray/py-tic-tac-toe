@@ -1,7 +1,9 @@
+from game.out_cli import OutCLI
+
 class View:
-  def __init__(self):
-    return
-   
+  def __init__(self, output=OutCLI()):
+    self.output = output
+
   def dynamic_section(self, selections):
     final_string = ""
     staged = []
@@ -71,3 +73,6 @@ class View:
       print("Player 2 Wins!")
     else:
       print("Player 1 Wins!")
+
+  def pose_confirmation(self, question, default_state=True):
+    return True

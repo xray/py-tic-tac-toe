@@ -3,7 +3,6 @@ from game.user_input import UserInput
 def test_validation_too_long():
   new_user_input = UserInput()
   validation_errors = new_user_input.validate_input("A11")
-  print(validation_errors)
   assert validation_errors.is_valid == False
   assert validation_errors.errors[0] == str("Input is 1 characters too long...")
 

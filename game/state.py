@@ -1,3 +1,5 @@
+import uuid
+import datetime
 from game.view import View
 
 DEFAULT_DEPENDENCIES = {
@@ -5,43 +7,104 @@ DEFAULT_DEPENDENCIES = {
 }
 
 class State:
-  def __init__(self, board_size=3, injected_dependencies=None):
+  def __init__(self, previous_state=None, changes=None):
+    if changes == None:
+      changes = {}
+    if previous_state != None:
+      state_options = {
+        "game_id": previous_state.game_id,
+        "board": previous_state.board,
+        "player_count": previous_state.player_count,
+        "player_ids": previous_state.player_ids,
+        "players_turns": previous_state.player_turn,
+        "game_complete": False,
+        "history": previous_state.history
+      }
+    else:
+      state_options = {}
+
+    state_config = dict(state_options, **changes)
+    
+    self.game_id = self.set_up_game_id(state_config.get("game_id"))
+    self.board = self.set_up_board(state_config.get("board"))
+    self.player_ids = self.set_up_player_ids(players=state_config.get("player_ids"), player_count=state_config.get("player_count", 2))
+    self.player_count = state_options.get("player_count", 2)
+    self.player_turn = self.set_up_player_turn(state_config.get("players_turns"))
+    self.game_complete = state_config.get("game_complete", False)
+    self.history = self.set_up_history(previous_state=previous_state, history=state_config.get("history"))
+
+  def retrieve(self):
+    return self
+
+  def set_up_game_id(self, game_id=None):
+    if game_id == None:
+      time = datetime.datetime.now()
+      game_id = str(time.year) + "-" + str(time.month) + "-" + str(time.day) + "-" + str(time.hour) + "-" + str(time.minute) + "-" + str(time.second) + "-" + str(time.microsecond)
+    return game_id
+  
+  def set_up_board(self, board=None):
+    if board == None or board.get("status") == None:
+      if board == None:
+        board = {}
+      for length in range(board.get("size", 3)):
+        new_section = []
+        for width in range(board.get("size", 3)):
+          new_section.append(0)
+        if board.get("status") == None:
+          board["status"] = []
+        board["status"].append(new_section)
+    return board
+
+  def set_up_player_ids(self, players=None, player_count=2):
+    if players == None:
+      players = []
+      for index in range(player_count):
+        players.append(uuid.uuid4())
+    return players
+
+  def set_up_player_turn(self, turn=None):
+    if turn == None:
+      return 1
+    else:
+      return turn + 1
+  
+  def set_up_history(self, previous_state=None, history=None):
+    if previous_state == None:
+      return []
+    else:
+      history.append(previous_state)
+      return history
+
+class StateManager:
+  def __init__(self, board_size=3, number_of_players=2, injected_dependencies=None):
     if injected_dependencies == None:
       injected_dependencies = {}
     dependencies = dict(DEFAULT_DEPENDENCIES, **injected_dependencies)
     self.view = dependencies.get("view")
-    self.user_input = []
-    self.player1_turn = True
-    self.board_size = self.regulate_board_size(board_size)
-    self.board = self.create_board(self.board_size)
-  
-  def update_input(self, player_input):
-    self.user_input = player_input
 
-  def create_board(self, board_size=None):
-    if board_size == None:
-      board_size = self.board_size
-    new_board = []
-    for length in range(board_size):
-      new_section = []
-      for width in range(board_size):
-        new_section.append(0)
-      new_board.append(new_section)
-    return new_board
+  def create(self, board_size=3, number_of_players=2):
+    new_game = State(changes={
+      "board": {
+        "size": self.regulate_board_size(board_size)
+        },
+      "player_count": number_of_players
+    })
+    return new_game
 
-  def update_board(self, coordinates):
-    if self.player1_turn:
-      self.board[coordinates[0]][coordinates[1]] = 1
-    else:
-      self.board[coordinates[0]][coordinates[1]] = 2
-    self.player1_turn = not self.player1_turn
+  def update_board(self, state, coordinates):
+    current_board = state.board["status"]
+    for index, player in enumerate(len(state.player_ids)):
+      if ((index + 1) % state.player_turn) == 0:
+        current_board[coordinates[0]][coordinates[1]] = (index + 1)
+    return State(state, {"board": current_board})
   
-  def regulate_board_size(self, board_size=None):
-    if board_size == None:
-      board_size = self.board_size
+  def regulate_board_size(self, board_size):
     if board_size > 9:
       self.view.error(UserWarning("Board size cannot exceed 9x9..."))
       return 9
+    if board_size < 3:
+      self.view.error(UserWarning("Board size cannot be smaller than 3x3"))
+      return 3
     else:
       return board_size
 

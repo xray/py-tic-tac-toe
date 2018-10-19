@@ -1,3 +1,7 @@
+# Game Data
+game/data
+game/*pg.py
+
 # Editors
 .vscode/
 .idea/
@@ -108,3 +112,5 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+/playground

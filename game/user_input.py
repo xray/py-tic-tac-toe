@@ -1,10 +1,10 @@
 import warnings
 from game.view import View
-from game.state import State
+from game.state import StateManager
 
 DEFAULT_DEPENDENCIES = {
   "view": View(),
-  "state": State()
+  "state": StateManager()
 }
 
 class ValidationResult:
