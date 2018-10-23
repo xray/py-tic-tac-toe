@@ -59,7 +59,7 @@ def read_file(id):
   data_folder = os.path.join(current_dir, r'pg_data')
   with open(os.path.join(data_folder, id + ".dat"), "rb") as save_game:
     sg_obj = pickle.load(save_game)
-    return game_state
+    return sg_obj
 
 test_state = StateManager()
 game_state = test_state.create()
