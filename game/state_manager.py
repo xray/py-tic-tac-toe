@@ -2,13 +2,13 @@ import uuid
 import datetime
 from game.view import View
 from game.state import State
-from game.state_storage import StateStorage
+from game.state_repo import StateRepo
 
 class StateManager:
-  def __init__(self, state=State, view=View(), state_storage=StateStorage()):
+  def __init__(self, state=State, view=View(), state_repo=StateRepo()):
     self.view = view
     self.state = state
-    self.state_storage = state_storage
+    self.state_repo = state_repo
 
   def create(self, state_configuration=None):
     state_defaults = {
@@ -32,7 +32,7 @@ class StateManager:
       "game_complete": configured_game_completion,
       "history": configured_history
     }, **configured_board))
-    self.state_storage.write_state(new_state)
+    self.state_repo.write_state(new_state)
     return new_state
 
   def update(self, to_update, changes, update_turn=True):
@@ -41,23 +41,26 @@ class StateManager:
     else:
       updated_board = {}
     if update_turn == True:
-      updated_turn_count = to_update.player_turn
-      updated_turn_count += 1
-      updated_history = to_update.history.append(to_update)
+      print(to_update.player_turn)
+      print(to_update.player_count)
+      if to_update.player_turn == (to_update.player_count):
+        to_update.player_turn = 1
+      else:
+        to_update.player_turn += 1
+      updated_history = to_update.history
+      updated_history.append(to_update)
     updated_completion = self.is_game_complete(to_update)
     return self.state(dict({
       "game_id": to_update.game_id,
       "player_ids": to_update.player_ids,
-      "player_turn": updated_turn_count,
+      "player_turn": to_update.player_turn,
       "game_complete": updated_completion,
       "history": updated_history
     }, **updated_board))
 
   def update_board(self, state, coordinates):
     current_board = state.board["status"]
-    for index in range(len(state.player_ids)):
-      if ((index + 1) % state.player_turn) == 0:
-        current_board[coordinates[0]][coordinates[1]] = (index)
+    current_board[coordinates[0]][coordinates[1]] = state.player_turn
     return {
       "board": {
         "size": state.board["size"],

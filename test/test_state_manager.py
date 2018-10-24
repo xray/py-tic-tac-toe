@@ -15,6 +15,23 @@ def test_update_state():
   assert updated_state.board == {'size': 3, 'status': [[0, 0, 0], [0, 1, 0], [0, 0, 0]]}
   assert updated_state.player_turn == 2
 
+def test_update_state_three_times():
+  sm = StateManager()
+  new_state = sm.create()
+  updated_state = sm.update(new_state, {"coordinates": [1, 1]})
+  assert updated_state.board == {'size': 3, 'status': [[0, 0, 0], [0, 1, 0], [0, 0, 0]]}
+  assert updated_state.player_turn == 2
+  updated_state = sm.update(updated_state, {"coordinates": [0, 1]})
+  assert updated_state.board == {'size': 3, 'status': [[0, 2, 0], [0, 1, 0], [0, 0, 0]]}
+  assert updated_state.player_turn == 1
+
+
+def test_update_board():
+  sm = StateManager()
+  new_state = sm.create()
+  updated_board = sm.update_board(new_state, [1,1])
+  assert updated_board["board"] == {'size': 3, 'status': [[0, 0, 0], [0, 1, 0], [0, 0, 0]]}
+
 def test_dynamic_board():
   sm = StateManager()
   new_state = sm.create({"board_size": 5})

@@ -4,9 +4,9 @@ class InCLI:
   def __init__(self, cli_validation=CLIValidation()):
     self.cli_validation = cli_validation
   
-  def input_text(self):
+  def input_text(self, state):
     player_input = input("Make a move: ")
-    if self.cli_validation.validate_move_text(player_input).success:
+    if self.cli_validation.validate_move_text(state, player_input).success:
       return self.convert_input(player_input)
     else:
       return self.input_text

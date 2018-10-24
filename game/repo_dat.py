@@ -1,7 +1,7 @@
 import os
 import pickle
 
-class StorageDat:
+class RepoDat:
   def __init__(self):
     current_dir = os.getcwd()
     self.data_folder = os.path.join(current_dir, r'data')

@@ -1,6 +1,6 @@
-from game.storage_dat import StorageDat as db
+from game.repo_dat import RepoDat as db
 
-class StateStorage:
+class StateRepo:
   def __init__(self, storage_type=db):
     self.db = db()
 

@@ -1,6 +1,6 @@
 # Game Data
-game/data
 game/*pg.py
+data/
 
 # Editors
 .vscode/
