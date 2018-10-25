@@ -9,5 +9,5 @@ How to play:
 
 ### Tests
 How to run tests:
-- Install Pytest
+- Install [Pytest](https://docs.pytest.org/en/latest/getting-started.html)
 - Run ```pytest``` in project directory
