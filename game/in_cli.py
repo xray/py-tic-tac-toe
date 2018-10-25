@@ -6,10 +6,12 @@ class InCLI:
   
   def input_text(self, state):
     player_input = input("Make a move: ")
-    if self.cli_validation.validate_move_text(state, player_input).success:
+    move_result = self.cli_validation.validate_move_text(state, player_input)
+    if move_result.success:
       return self.convert_input(player_input)
     else:
-      return self.input_text
+      print(move_result.errors)
+      return self.input_text(state)
 
   def convert_input(self, validated_input):
     player_input = validated_input.upper()

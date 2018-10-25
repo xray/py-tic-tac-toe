@@ -2,7 +2,7 @@ from game.state_manager import StateManager
 
 def test_new_state():
   sm = StateManager()
-  new_state = sm.create()
+  new_state = sm.create({"game_id": "debug_testing"})
   assert new_state.board == {'size': 3, 'status': [[0, 0, 0], [0, 0, 0], [0, 0, 0]]}
   assert new_state.player_turn == 1
   assert new_state.player_count == 2
@@ -10,14 +10,14 @@ def test_new_state():
 
 def test_update_state():
   sm = StateManager()
-  new_state = sm.create()
+  new_state = sm.create({"game_id": "debug_testing"})
   updated_state = sm.update(new_state, {"coordinates": [1, 1]})
   assert updated_state.board == {'size': 3, 'status': [[0, 0, 0], [0, 1, 0], [0, 0, 0]]}
   assert updated_state.player_turn == 2
 
 def test_update_state_three_times():
   sm = StateManager()
-  new_state = sm.create()
+  new_state = sm.create({"game_id": "debug_testing"})
   updated_state = sm.update(new_state, {"coordinates": [1, 1]})
   assert updated_state.board == {'size': 3, 'status': [[0, 0, 0], [0, 1, 0], [0, 0, 0]]}
   assert updated_state.player_turn == 2
@@ -28,13 +28,13 @@ def test_update_state_three_times():
 
 def test_update_board():
   sm = StateManager()
-  new_state = sm.create()
+  new_state = sm.create({"game_id": "debug_testing"})
   updated_board = sm.update_board(new_state, [1,1])
   assert updated_board["board"] == {'size': 3, 'status': [[0, 0, 0], [0, 1, 0], [0, 0, 0]]}
 
 def test_dynamic_board():
   sm = StateManager()
-  new_state = sm.create({"board_size": 5})
+  new_state = sm.create({"board_size": 5, "game_id": "debug_testing"})
   assert new_state.board["status"] == [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
 
 def test_board_size():

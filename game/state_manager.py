@@ -1,5 +1,6 @@
 import uuid
 import datetime
+import copy
 from game.view import View
 from game.state import State
 from game.state_repo import StateRepo
@@ -35,28 +36,29 @@ class StateManager:
     self.state_repo.write_state(new_state)
     return new_state
 
-  def update(self, to_update, changes, update_turn=True):
+  def update(self, state, changes, update_turn=True):
+    unchanged_state = copy.deepcopy(state)
     if changes.get("coordinates") != None:
-     updated_board = self.update_board(to_update, changes.get("coordinates"))
+     updated_board = self.update_board(state, changes.get("coordinates"))
     else:
       updated_board = {}
     if update_turn == True:
-      print(to_update.player_turn)
-      print(to_update.player_count)
-      if to_update.player_turn == (to_update.player_count):
-        to_update.player_turn = 1
+      if state.player_turn == (state.player_count):
+        state.player_turn = 1
       else:
-        to_update.player_turn += 1
-      updated_history = to_update.history
-      updated_history.append(to_update)
-    updated_completion = self.is_game_complete(to_update)
-    return self.state(dict({
-      "game_id": to_update.game_id,
-      "player_ids": to_update.player_ids,
-      "player_turn": to_update.player_turn,
+        state.player_turn += 1
+      state.history.append(unchanged_state)
+    updated_completion = self.is_game_complete(state)
+    updated_state = self.state(dict({
+      "game_id": state.game_id,
+      "player_ids": state.player_ids,
+      "player_turn": state.player_turn,
       "game_complete": updated_completion,
-      "history": updated_history
+      "history": state.history
     }, **updated_board))
+    self.state_repo.write_state(updated_state)
+    return updated_state
+
 
   def update_board(self, state, coordinates):
     current_board = state.board["status"]

@@ -18,7 +18,7 @@ def test_input_too_short():
 def test_input_invalid_first_character():
   cli_valid = CLIValidation()
   sm = StateManager()
-  new_state = sm.create()
+  new_state = sm.create({"game_id": "debug_testing"})
   text_input = "D2"
   text_input = list(text_input.upper())
   board_size = new_state.board["size"]
@@ -28,7 +28,7 @@ def test_input_invalid_first_character():
 def test_input_invalid_second_character():
   cli_valid = CLIValidation()
   sm = StateManager()
-  new_state = sm.create()
+  new_state = sm.create({"game_id": "debug_testing"})
   text_input = "A4"
   text_input = list(text_input.upper())
   board_size = new_state.board["size"]
@@ -38,7 +38,7 @@ def test_input_invalid_second_character():
 def test_validation_multi_error():
   cli_valid = CLIValidation()
   sm = StateManager()
-  new_state = sm.create()
+  new_state = sm.create({"game_id": "debug_testing"})
   validation_errors = cli_valid.validate_move_text(new_state, "RESPECT")
   assert validation_errors.success == False
   assert validation_errors.errors[0] == str("Input is 5 characters too long...")
@@ -48,7 +48,7 @@ def test_validation_multi_error():
 def test_validation_big_board_one_off_cases():
   cli_valid = CLIValidation()
   sm = StateManager()
-  new_state = sm.create({"board_size": 8})
+  new_state = sm.create({"board_size": 8, "game_id": "debug_testing"})
   validation_errors = cli_valid.validate_move_text(new_state, "I9")
   assert validation_errors.success == False
   assert validation_errors.errors[0] == str("\"I\" is not one of the valid selctions in position 1... (A - H)")

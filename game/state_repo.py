@@ -7,5 +7,8 @@ class StateRepo:
   def write_state(self, state):
     self.db.write(state)
 
-  def read_state(self, state_id):
-    return self.db.read(state_id)
+  def read_state(self, game_id):
+    return self.db.read(game_id)
+  
+  def delete_state(self, game_id):
+    return self.db.delete(game_id)
