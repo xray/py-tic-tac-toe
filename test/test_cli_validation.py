@@ -5,14 +5,14 @@ def test_input_too_long():
   cli_valid = CLIValidation()
   text_input = "A11"
   text_input = list(text_input.upper())
-  validation_errors = cli_valid.is_too_long(text_input)
+  validation_errors = cli_valid.is_too_long(0, text_input)
   assert validation_errors[0] == str("Input is 1 characters too long...")
 
 def test_input_too_short():
   cli_valid = CLIValidation()
   text_input = "A"
   text_input = list(text_input.upper())
-  validation_errors = cli_valid.is_too_short(text_input)
+  validation_errors = cli_valid.is_too_short(0, text_input)
   assert validation_errors[0] == str("Input is 1 characters too short...")
 
 def test_input_invalid_first_character():
