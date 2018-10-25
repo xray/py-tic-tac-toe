@@ -126,13 +126,13 @@ class StateManager:
     spaces_filled = 0
 
     for rows in game_state.board["status"]:
-      possible_wins_to_check.append(rows)
+      possible_wins_to_check.append(self.check_identical_values(rows))
     
     for column in range(len(game_state.board["status"])):
       column_possibility = []
       for lists in game_state.board["status"]:
         column_possibility.append(lists[column])
-      possible_wins_to_check.append(column_possibility)
+      possible_wins_to_check.append(self.check_identical_values(column_possibility))
 
     for diagonal_left_to_right in range(2):
       diagonal_possibility = []
@@ -140,7 +140,7 @@ class StateManager:
       for lists in game_state.board["status"]:
         diagonal_possibility.append(lists[current_position])
         current_position += 1
-      possible_wins_to_check.append(diagonal_possibility)
+      possible_wins_to_check.append(self.check_identical_values(diagonal_possibility))
 
     for diagonal_right_to_left in range(2):
       diagonal_possibility = []
@@ -148,22 +148,17 @@ class StateManager:
       for lists in game_state.board["status"]:
         diagonal_possibility.append(lists[current_position])
         current_position -= 1
-      possible_wins_to_check.append(diagonal_possibility)
+      possible_wins_to_check.append(self.check_identical_values(diagonal_possibility))
 
     for cats_game in game_state.board["status"]:
       for cats_game_possibility in cats_game:
-        if cats_game_possibility == 0:
-          continue
-        else:
+        if cats_game_possibility != 0:
           spaces_filled += 1
-    
+        
     if spaces_filled == game_state.board["size"] * game_state.board["size"]:
       return True, True
     else:
-      for possible_win in possible_wins_to_check:
-        if self.check_identical_values(possible_win) == True:
-          win_count += 1
-      if win_count > 0:
+      if any(possible_wins_to_check):
         return True, False
       else:
         return False, False

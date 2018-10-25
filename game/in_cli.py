@@ -15,7 +15,5 @@ class InCLI:
 
   def convert_input(self, validated_input):
     player_input = validated_input.upper()
-    conversion = []
-    conversion.append(ord(player_input[0].lower())-97)
-    conversion.append(int(player_input[1]) - 1)
+    conversion = [ord(player_input[0].lower())-97, int(player_input[1]) - 1]
     return conversion

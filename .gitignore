@@ -1,14 +1,6 @@
 # Game Data
 data/
 
-# Unused Files
-game/*choice.py
-game/*comp_player.py
-game/*game_output.py
-game/*out_cli.py
-test/*test_comp_player.py
-*pg.py
-
 # macOS
 *.DS_Store
 
