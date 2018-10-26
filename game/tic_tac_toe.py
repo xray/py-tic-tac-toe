@@ -13,7 +13,7 @@ DEFAULT_DEPENDENCIES = {
 }
 
 class TicTacToe:
-  def __init__(self, injected_dependencies=None):
+  def __init__(self, injected_dependencies=None, game_id=None):
     if injected_dependencies == None:
       injected_dependencies = {}
     dependencies = dict(DEFAULT_DEPENDENCIES, **injected_dependencies)
@@ -22,10 +22,11 @@ class TicTacToe:
     self.user_input = dependencies["InCLI"]
     self.game_input = dependencies.get("GameInput")
     self.state_repo = dependencies.get("StateRepo")
-    new_game = self.state_manager.create()
-    self.play(new_game.game_id)
+    self.game_id = self.setup_game_id(game_id)
 
-  def play(self, game_id):
+  def play(self, game_id=None):
+    if game_id == None:
+      game_id = self.game_id
     state = self.state_repo.read_state(game_id)
     self.view.board(state.board["status"])
     current_player = state.player_turn
@@ -45,6 +46,15 @@ class TicTacToe:
     else:
       return self.play(updated_state.game_id)
   
+  def setup_game_id(self, game_id=None):
+    if game_id == None:
+      print("Hello World")
+      new_state = self.state_manager.create()
+      return new_state.game_id
+    else:
+      print("other thing")
+      return game_id
+
   def validate_input(self, state, player_id):
     user_in = self.user_input.input_text(state)
     if self.game_input.handle_input(state, player_id, user_in).success:

@@ -3,25 +3,17 @@ from game.state_manager import StateManager
 
 def test_position_validation_valid():
   game_valid = GameValidation()
-  class State:
-    def __init__(self):
-      self.board = {
-        "status": [[1, 1, 1], [1, 1, 1], [1, 0, 1]],
-        "size": 3
-      }
-  result = game_valid.validate_position(State(), [2, 1])
+  sm = StateManager()
+  new_state = sm.create({"board_size": 3, "board_status": [[1, 1, 1], [1, 1, 1], [1, 0, 1]]})
+  result = game_valid.validate_position(new_state, [2, 1])
   assert result.success == True
   assert result.errors == []
 
 def test_position_validation_invalid():
   game_valid = GameValidation()
-  class State:
-    def __init__(self):
-      self.board = {
-        "status": [[0, 0, 0], [0, 0, 0], [0, 1, 0]],
-        "size": 3
-      }
-  result = game_valid.validate_position(State(), [2, 1])
+  sm = StateManager()
+  new_state = sm.create({"board_size": 3, "board_status": [[0, 0, 0], [0, 0, 0], [0, 1, 0]]})
+  result = game_valid.validate_position(new_state, [2, 1])
   assert result.success == False
   assert result.errors == ["This position is already populated..."]
 

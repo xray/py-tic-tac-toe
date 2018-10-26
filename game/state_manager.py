@@ -6,9 +6,8 @@ from game.state import State
 from game.state_repo import StateRepo
 
 class StateManager:
-  def __init__(self, state=State, view=View(), state_repo=StateRepo()):
+  def __init__(self, view=View(), state_repo=StateRepo()):
     self.view = view
-    self.state = state
     self.state_repo = state_repo
 
   def create(self, state_configuration=None):
@@ -26,7 +25,7 @@ class StateManager:
     configured_player_turn = state_configuration.get("player_turn", 1)
     configured_game_completion = state_configuration.get("game_complete", False)
     configured_history = state_configuration.get("history", [])
-    new_state = self.state(dict({
+    new_state = State(dict({
       "game_id": configured_game_id,
       "player_ids": configured_player_ids,
       "player_turn": configured_player_turn,
@@ -49,7 +48,7 @@ class StateManager:
         state.player_turn += 1
       state.history.append(unchanged_state)
     updated_completion = self.is_game_complete(state)
-    updated_state = self.state(dict({
+    updated_state = State(dict({
       "game_id": state.game_id,
       "player_ids": state.player_ids,
       "player_turn": state.player_turn,
